@@ -1,4 +1,4 @@
-package labor2.Exercise5;
+package labor3_ISP.Exercise6;
 
 public class Product {
     private String name;

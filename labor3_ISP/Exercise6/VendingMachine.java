@@ -1,4 +1,4 @@
-package labor2.Exercise6;
+package labor3_ISP.Exercise6;
 
 import java.util.HashMap;
 import java.util.Map;

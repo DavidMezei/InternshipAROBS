@@ -1,4 +1,4 @@
-package labor1;
+package labor2_ISP;
 
 import java.util.Scanner;
 import java.util.Vector;

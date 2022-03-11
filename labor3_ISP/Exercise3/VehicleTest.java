@@ -1,4 +1,4 @@
-package labor2.Exercise3;
+package labor3_ISP.Exercise3;
 
 import org.junit.Test;
 

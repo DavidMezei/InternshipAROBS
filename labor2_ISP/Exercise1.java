@@ -1,3 +1,5 @@
+package labor2_ISP;
+
 import java.util.Random;
 import java.util.Scanner;
 

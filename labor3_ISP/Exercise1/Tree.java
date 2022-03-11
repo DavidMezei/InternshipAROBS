@@ -1,4 +1,4 @@
-package labor2.Exercise1;
+package labor3_ISP.Exercise1;
 
 public class Tree {
     private int height;
