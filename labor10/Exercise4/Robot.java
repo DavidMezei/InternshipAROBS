@@ -9,12 +9,11 @@ public class Robot extends Thread {
     private Playground playground;
     private int robotId;
 
-    public Robot(Playground playground, int robotId) {
+    public Robot(Playground playground, int x, int y, int robotId) {
         this.playground = playground;
-        Random random = new Random();
-        x = random.nextInt(100);
-        y = random.nextInt(100);
         this.robotId = robotId;
+        this.x = x;
+        this.y = y;
     }
 
     public int getX() {
@@ -47,18 +46,23 @@ public class Robot extends Thread {
                 }
                 notifyAll();
             }
-            int nextMove = random.nextInt(3) - 1;
-            x += nextMove;
-            y += nextMove;
-            if (x == 0 || x == 99) {
-                x -= nextMove;
+            while (x == previousX && y == previousY) {
+                int nextMove = random.nextInt(3) - 1;
+                x += nextMove;
+                y += nextMove;
+                if (x == 0 || x == playground.getTableSize() - 1) {
+                    x -= nextMove;
+                }
+                if (y == 0 || y == playground.getTableSize() - 1) {
+                    y -= nextMove;
+                }
             }
-            if (y == 0 || y == 99) {
-                y -= nextMove;
-            }
+
             if (playground.isThereSomebody(x, y)) {
+                System.out.println("Robot id=" + robotId + " move from x:" + previousX + " y:" + previousY + " to " + "x:" + x + " y:" + y);
+                System.out.println("Robot id=" + playground.getRobotIdAt(x, y) + " DESTROYED by robot id=" + playground.getRobotIdAt(previousX, previousY));
                 playground.destroyRobotAt(x, y);
-                playground.destroyRobotAt(previousX,previousY);
+                playground.destroyRobotAt(previousX, previousY);
             } else {
                 playground.moveRobot(previousX, previousY, x, y);
                 System.out.println("Robot id=" + robotId + " move from x:" + previousX + " y:" + previousY + " to " + "x:" + x + " y:" + y);
