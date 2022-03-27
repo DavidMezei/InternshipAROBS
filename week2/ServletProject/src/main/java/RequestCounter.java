@@ -1,3 +1,6 @@
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.annotation.WebListener;
@@ -7,7 +10,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @WebListener
 public class RequestCounter implements ServletRequestListener {
-    AtomicInteger counter = new AtomicInteger();
+    private AtomicInteger counter = new AtomicInteger();
+    private static final Logger logger = LoggerFactory.getLogger(RequestCounter.class);
 
     @Override
     public void requestDestroyed(ServletRequestEvent sre) {
@@ -16,6 +20,8 @@ public class RequestCounter implements ServletRequestListener {
         if (request.getServletPath().equals("/convertHex")) {
             counter.addAndGet(1);
             session.setAttribute("requestCount", counter.get());
+            logger.info("requestCount: " + counter.get());
         }
+        logger.info("requestDestroyed");
     }
 }

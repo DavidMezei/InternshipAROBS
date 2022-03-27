@@ -1,12 +1,17 @@
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebFilter(urlPatterns = "/convertHex")
 public class HexNumberFilter implements Filter {
+    private static final Logger logger = LoggerFactory.getLogger(HexNumberFilter.class.getName());
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        logger.info("HexNumberFilter.doFilter()");
         long startTime = System.currentTimeMillis();
         ServletContext context = servletRequest.getServletContext();
         String input = servletRequest.getParameter("hex");
@@ -20,5 +25,6 @@ public class HexNumberFilter implements Filter {
         filterChain.doFilter(servletRequest, servletResponse);
         long endTime = System.currentTimeMillis();
         context.setAttribute("executionTime",endTime-startTime);
+        logger.info("HexNumberFilter.doFilter() execution time: " + (endTime-startTime));
     }
 }
