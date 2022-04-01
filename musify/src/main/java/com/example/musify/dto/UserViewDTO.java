@@ -1,21 +1,21 @@
-package com.example.musify.model;
+package com.example.musify.dto;
 
-public class User {
+public class UserViewDTO {
     private Integer id;
     private String firstName;
     private String lastName;
+    private String fullName;
     private String email;
-    private String encryptedPassword;
     private String country;
     private String role;
     private String status;
 
-    public User(Integer id, String firstName, String lastName, String email, String encryptedPassword, String country, String role, String status) {
+    public UserViewDTO(Integer id, String firstName, String lastName, String fullName, String email, String country, String role, String status) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.fullName = fullName;
         this.email = email;
-        this.encryptedPassword = encryptedPassword;
         this.country = country;
         this.role = role;
         this.status = status;
@@ -45,20 +45,20 @@ public class User {
         this.lastName = lastName;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getEncryptedPassword() {
-        return encryptedPassword;
-    }
-
-    public void setEncryptedPassword(String encryptedPassword) {
-        this.encryptedPassword = encryptedPassword;
     }
 
     public String getCountry() {
@@ -83,9 +83,5 @@ public class User {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getFullName() {
-        return firstName + " " + lastName;
     }
 }
