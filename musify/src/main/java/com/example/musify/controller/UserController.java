@@ -19,30 +19,25 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public User getUser(@RequestParam Integer id){
-        return userService.getUserById(id);
-    }
-
-    @GetMapping("/user/{id}")
-    public ResponseEntity<UserViewDTO> getUserById(@PathVariable int id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<UserViewDTO> getUserById(@PathVariable Integer id) {
         UserViewDTO user = userService.getUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping("/user/register")
+    @PostMapping("/register")
     public ResponseEntity<UserViewDTO> createUser(@RequestBody @Valid UserDTO userDTO) {
         UserViewDTO userViewDTO = userService.createUser(userDTO);
         return new ResponseEntity<>(userViewDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/user/login")
-    public ResponseEntity<UserViewDTO> login(@RequestBody @Valid UserLoginDTO userLoginDTO) {
-        UserViewDTO userViewDTO = userService.loginUser(userLoginDTO);
-        return new ResponseEntity<>(userViewDTO, HttpStatus.OK);
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody @Valid UserLoginDTO userLoginDTO) {
+        String token = userService.loginUser(userLoginDTO);
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
-    @PutMapping("/user/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UserViewDTO> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
         UserViewDTO userViewDTO = userService.updateUser(id, userDTO);
         return new ResponseEntity<>(userViewDTO, HttpStatus.OK);

@@ -5,6 +5,7 @@ import com.example.musify.dto.UserLoginDTO;
 import com.example.musify.dto.UserViewDTO;
 import com.example.musify.model.User;
 import com.example.musify.repo.UserRepository;
+import com.example.musify.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +25,9 @@ public class UserService {
         this.userMapper = new UserMapperImpl();
     }
 
-    public User getUserById(Integer id) {
-        return userRepository.getUserById(id);
+    public UserViewDTO getUserById(Integer id) {
+        User user = userRepository.getUserById(id);
+        return userMapper.toViewDTO(user);
     }
 
     public UserViewDTO getUserById(int id) {
@@ -45,12 +47,12 @@ public class UserService {
         return userMapper.toViewDTO(user);
     }
 
-    public UserViewDTO loginUser(UserLoginDTO userLoginDTO) {
+    public String loginUser(UserLoginDTO userLoginDTO) {
         User user = userRepository.getUserByEmail(userLoginDTO.getEmail());
         String encryptedPassword = encryptPassword(userLoginDTO.getPassword());
 
         if (user != null && user.getEncryptedPassword().equals(encryptedPassword)) {
-            return userMapper.toViewDTO(user);
+            return JwtUtils.generateToken(user.getId(), user.getEmail(), user.getRole());
         } else {
             throw new IllegalArgumentException("Invalid email or password");
         }
