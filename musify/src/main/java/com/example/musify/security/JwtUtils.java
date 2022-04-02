@@ -85,4 +85,8 @@ public class JwtUtils {
 
         throw new RuntimeException("Something went wrong!");
     }
+
+    public static String extractToken(String header) {
+        return header.replaceAll("Bearer ", "").trim();
+    }
 }

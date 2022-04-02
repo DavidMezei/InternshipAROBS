@@ -16,9 +16,11 @@ import java.util.Map;
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
+    private final JWTBlacklist blacklist;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JWTBlacklist blacklist) {
         super(authenticationManager);
+        this.blacklist = blacklist;
     }
 
     @Override
@@ -26,6 +28,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String header = req.getHeader(HEADER_STRING);
 
         if (header == null || !header.startsWith(TOKEN_PREFIX)) {
+            chain.doFilter(req, res);
+            return;
+        }
+
+        if (blacklist.isBlacklisted(JwtUtils.extractToken(header))) {
             chain.doFilter(req, res);
             return;
         }

@@ -37,6 +37,12 @@ public class UserController {
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        String response = userService.logoutUser(token);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<UserViewDTO> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
         UserViewDTO userViewDTO = userService.updateUser(id, userDTO);

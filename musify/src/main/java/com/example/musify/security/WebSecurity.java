@@ -8,6 +8,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
+    private JWTBlacklist blacklist;
+
+    public WebSecurity(JWTBlacklist blacklist) {
+        super();
+        this.blacklist = blacklist;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -17,7 +23,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/user/register", "/user/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JwtAuthorizationFilter(authenticationManager()))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), blacklist))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .csrf().disable();

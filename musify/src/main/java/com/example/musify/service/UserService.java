@@ -5,6 +5,7 @@ import com.example.musify.dto.UserLoginDTO;
 import com.example.musify.dto.UserViewDTO;
 import com.example.musify.model.User;
 import com.example.musify.repo.UserRepository;
+import com.example.musify.security.JWTBlacklist;
 import com.example.musify.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,13 +16,14 @@ import java.security.NoSuchAlgorithmException;
 
 @Service
 public class UserService {
-
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final JWTBlacklist blacklist;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, JWTBlacklist blacklist) {
         this.userRepository = userRepository;
+        this.blacklist = blacklist;
         this.userMapper = new UserMapperImpl();
     }
 
@@ -80,4 +82,8 @@ public class UserService {
         }
     }
 
+    public String logoutUser(String header) {
+        blacklist.addToken(JwtUtils.extractToken(header));
+        return "Successfully logged out";
+    }
 }
