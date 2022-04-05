@@ -4,6 +4,7 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.hibernate.validator.constraintvalidation.HibernateConstraintValidator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,8 @@ import javax.sql.DataSource;
 public class MusifyApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MusifyApplication.class, args);
+		//SpringApplication.run(MusifyApplication.class, args);
+		HibernateTest.test();
 	}
 
 	@Bean
