@@ -1,11 +1,10 @@
 package com.example.musify;
 
+import com.example.musify.hibernate.HibernateTest;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.hibernate.validator.constraintvalidation.HibernateConstraintValidator;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;

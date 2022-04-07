@@ -1,4 +1,4 @@
-package com.example.musify;
+package com.example.musify.hibernate;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
