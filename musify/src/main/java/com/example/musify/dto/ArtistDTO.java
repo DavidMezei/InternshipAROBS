@@ -1,11 +1,13 @@
 package com.example.musify.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.sql.Date;
 
 public class ArtistDTO {
     private Integer id;
     private String firstName;
     private String lastName;
+    @NotBlank(message = "Stage name is required")
     private String stageName;
     private Date birthday;
     private String activityStartDate;

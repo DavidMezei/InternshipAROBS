@@ -4,6 +4,7 @@ import com.example.musify.dto.UserDTO;
 import com.example.musify.dto.UserLoginDTO;
 import com.example.musify.dto.UserViewDTO;
 import com.example.musify.mapper.UserMapper;
+import com.example.musify.mapper.UserMapperImpl;
 import com.example.musify.model.User;
 import com.example.musify.repo.UserRepository;
 import com.example.musify.security.JWTBlacklist;
