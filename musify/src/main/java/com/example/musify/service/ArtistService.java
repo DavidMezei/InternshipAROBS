@@ -27,7 +27,7 @@ public class ArtistService {
         return artistMapper.toDtos(artistRepository.findAll());
     }
 
-    public ArtistDTO getArtistById(int id) {
+    public ArtistDTO getArtistById(Integer id) {
         Optional<Artist> optional = artistRepository.findById(id);
         if(optional.isPresent()) {
             return artistMapper.toDto(optional.get());
@@ -45,7 +45,7 @@ public class ArtistService {
     }
 
     @Transactional
-    public ArtistDTO updateArtist(int id, ArtistDTO artistDTO) {
+    public ArtistDTO updateArtist(Integer id, ArtistDTO artistDTO) {
         Optional<Artist> optional = artistRepository.findById(id);
         if(optional.isPresent()) {
             Artist artist = optional.get();
@@ -64,7 +64,7 @@ public class ArtistService {
     }
 
     @Transactional
-    public String deleteArtistById(int id) {
+    public String deleteArtistById(Integer id) {
         Optional<Artist> optional = artistRepository.findById(id);
         if(optional.isPresent()) {
             artistRepository.delete(optional.get());

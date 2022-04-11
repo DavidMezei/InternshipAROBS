@@ -1,24 +1,52 @@
 package com.example.musify.model;
 
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
     private String email;
+    @Column(name = "encrypted_password")
     private String encryptedPassword;
     private String country;
     private String role;
     private String status;
 
-    public User(Integer id, String firstName, String lastName, String email, String encryptedPassword, String country, String role, String status) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.encryptedPassword = encryptedPassword;
-        this.country = country;
-        this.role = role;
-        this.status = status;
+    @OneToMany(mappedBy = "ownerUser")
+    Set<Playlist> ownedPlaylists = new HashSet<>();
+
+    @ManyToMany()
+    @JoinTable(name = "users_playlists",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "playlist_id") })
+    private Set<Playlist> followedPlaylists = new HashSet<>();
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
+    public void addOwnedPlaylist(Playlist playlist) {
+        ownedPlaylists.add(playlist);
+        playlist.setOwnerUser(this);
+    }
+
+    public void removeOwnedPlaylist(Playlist playlist) {
+        ownedPlaylists.remove(playlist);
+        playlist.setOwnerUser(null);
+    }
+
+    public Set<Playlist> getFollowedPlaylists() {
+        return followedPlaylists;
     }
 
     public Integer getId() {
@@ -85,7 +113,15 @@ public class User {
         this.status = status;
     }
 
-    public String getFullName() {
-        return firstName + " " + lastName;
+    public Set<Playlist> getOwnedPlaylists() {
+        return ownedPlaylists;
+    }
+
+    public void setOwnedPlaylists(Set<Playlist> ownedPlaylists) {
+        this.ownedPlaylists = ownedPlaylists;
+    }
+
+    public void setFollowedPlaylists(Set<Playlist> followedPlaylists) {
+        this.followedPlaylists = followedPlaylists;
     }
 }

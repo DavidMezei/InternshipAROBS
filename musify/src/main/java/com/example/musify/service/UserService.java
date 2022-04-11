@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -29,34 +31,44 @@ public class UserService {
         this.userMapper = new UserMapperImpl();
     }
 
-    public UserViewDTO getUserById(Integer id) {
-        User user = userRepository.getUserById(id);
-        return userMapper.toViewDTO(user);
+    public List<UserViewDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return userMapper.toViewDTOList(users);
     }
 
-    public UserViewDTO getUserById(int id) {
-        User user = userRepository.getUserById(id);
-        return userMapper.toViewDTO(user);
+    public UserViewDTO getUserById(Integer id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
+        return userMapper.toViewDTO(user.get());
     }
 
     public UserViewDTO createUser(UserDTO userDTO) {
+        Optional<User> optional = userRepository.findUserByEmail(userDTO.getEmail());
+
+        if (optional.isPresent()) {
+            throw new IllegalArgumentException("Email " + userDTO.getEmail() + " is already registered");
+        }
+
         User user = userMapper.toEntity(userDTO);
         String encryptedPassword = encryptPassword(userDTO.getPassword());
         user.setEncryptedPassword(encryptedPassword);
         user.setRole("user");
         user.setStatus("active");
-        int id = userRepository.createUser(user);
-        user.setId(id);
+        user = userRepository.save(user);
 
         return userMapper.toViewDTO(user);
     }
 
     public String loginUser(UserLoginDTO userLoginDTO) {
-        User user = userRepository.getUserByEmail(userLoginDTO.getEmail());
+        Optional<User> user = userRepository.findUserByEmail(userLoginDTO.getEmail());
         String encryptedPassword = encryptPassword(userLoginDTO.getPassword());
 
-        if (user != null && user.getEncryptedPassword().equals(encryptedPassword)) {
-            return JwtUtils.generateToken(user.getId(), user.getEmail(), user.getRole());
+        if (user.isPresent() && user.get().getEncryptedPassword().equals(encryptedPassword)) {
+
+            return JwtUtils.generateToken(user.get().getId(), user.get().getEmail(), user.get().getRole());
         } else {
             throw new IllegalArgumentException("Invalid email or password");
         }
@@ -67,7 +79,7 @@ public class UserService {
         String encryptedPassword = encryptPassword(userDTO.getPassword());
         user.setEncryptedPassword(encryptedPassword);
         user.setId(id);
-        userRepository.updateUser(user);
+        userRepository.save(user);
 
         return userMapper.toViewDTO(user);
     }
