@@ -40,12 +40,18 @@ CREATE TABLE alternative_song_titles (
 
 CREATE TABLE albums (
                         id INT NOT NULL AUTO_INCREMENT,
+                        artist_id INT,
+                        band_id INT,
                         title VARCHAR(45),
                         description VARCHAR(45),
                         genre VARCHAR(45),
                         release_date DATE,
                         label VARCHAR(45),
-                        PRIMARY KEY (id)
+                        PRIMARY KEY (id),
+                        FOREIGN KEY (artist_id)
+                            REFERENCES artists(id),
+                        FOREIGN KEY (band_id)
+                            REFERENCES bands(id)
 );
 
 CREATE TABLE artists (
@@ -69,34 +75,35 @@ CREATE TABLE bands (
 );
 
 CREATE TABLE playlists_songs (
-                                 @@ -101,37 +91,43 @@ CREATE TABLE users (
-                                 REFERENCES songs(id)
-    );
-
-CREATE TABLE artists_albums (
-                                id INT NOT NULL AUTO_INCREMENT,
-                                artist_id INT,
-                                band_id INT,
-                                album_id INT,
-                                PRIMARY KEY (id),
-                                FOREIGN KEY (artist_id)
-                                    REFERENCES artists(id),
-                                FOREIGN KEY (band_id)
-                                    REFERENCES bands(id),
-                                FOREIGN KEY (album_id)
-                                    REFERENCES albums(id)
+                                 id INT NOT NULL AUTO_INCREMENT,
+                                 playlist_id INT,
+                                 song_id INT,
+                                 PRIMARY KEY (id),
+                                 FOREIGN KEY (playlist_id)
+                                     REFERENCES playlists(id),
+                                 FOREIGN KEY (song_id)
+                                     REFERENCES songs(id)
 );
+
+CREATE TABLE albums_songs (
+                              id INT NOT NULL AUTO_INCREMENT,
+                              album_id INT,
+                              song_id INT,
+                              PRIMARY KEY (id),
+                              FOREIGN KEY (album_id)
+                                  REFERENCES albums(id),
+                              FOREIGN KEY (song_id)
+                                  REFERENCES songs(id)
+);
+
 
 CREATE TABLE artists_songs (
                                id INT NOT NULL AUTO_INCREMENT,
                                artist_id INT,
-                               band_id INT,
                                song_id INT,
                                PRIMARY KEY (id),
                                FOREIGN KEY (artist_id)
                                    REFERENCES artists(id),
-                               FOREIGN KEY (band_id)
-                                   REFERENCES bands(id),
                                FOREIGN KEY (song_id)
                                    REFERENCES songs(id)
 );
