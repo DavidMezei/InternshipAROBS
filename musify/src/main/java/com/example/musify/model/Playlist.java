@@ -25,6 +25,12 @@ public class Playlist {
     @ManyToMany(mappedBy = "subscribedToPlaylists")
     private Set<User> users = new HashSet<>();
 
+    @ManyToMany()
+    @JoinTable(name = "playlists_songs",
+            joinColumns = { @JoinColumn(name = "playlist_id") },
+            inverseJoinColumns = { @JoinColumn(name = "song_id") })
+    private Set<Song> songsInPlaylist = new HashSet<>();
+
     public Playlist() {
     }
 
@@ -84,5 +90,31 @@ public class Playlist {
     public void removeSubscribedUser(User user) {
         users.remove(user);
         user.getFollowedPlaylists().remove(this);
+    }
+
+    public Set<User> getSubscribedUsers() {
+        return users;
+    }
+
+    public void setSubscribedUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    public Set<Song> getSongsInPlaylist() {
+        return songsInPlaylist;
+    }
+
+    public void setSongsInPlaylist(Set<Song> songsInPlaylist) {
+        this.songsInPlaylist = songsInPlaylist;
+    }
+
+    public void addSong(Song song) {
+        songsInPlaylist.add(song);
+        song.getPlaylists().add(this);
+    }
+
+    public void removeSong(Song song) {
+        songsInPlaylist.remove(song);
+        song.getPlaylists().remove(this);
     }
 }

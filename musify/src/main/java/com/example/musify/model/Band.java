@@ -24,6 +24,18 @@ public class Band {
             inverseJoinColumns = {@JoinColumn(name = "artist_id")})
     private final Set<Artist> artists = new HashSet<>();
 
+    @ManyToMany()
+    @JoinTable(name = "artists_albums",
+            joinColumns = { @JoinColumn(name = "band_id") },
+            inverseJoinColumns = { @JoinColumn(name = "album_id") })
+    private Set<Album> bandAlbums = new HashSet<>();
+
+    @ManyToMany()
+    @JoinTable(name = "artists_songs",
+            joinColumns = { @JoinColumn(name = "band_id") },
+            inverseJoinColumns = { @JoinColumn(name = "song_id") })
+    private Set<Song> bandSongs = new HashSet<>();
+
     public Integer getId() {
         return id;
     }
@@ -69,5 +81,41 @@ public class Band {
 
     public String getLocation() {
         return location;
+    }
+
+    public Set<Album> getBandAlbums() {
+        return bandAlbums;
+    }
+
+    public void setBandAlbums(Set<Album> bandAlbums) {
+        this.bandAlbums = bandAlbums;
+    }
+
+    public Set<Song> getBandSongs() {
+        return bandSongs;
+    }
+
+    public void setBandSongs(Set<Song> bandSongs) {
+        this.bandSongs = bandSongs;
+    }
+
+    public void addAlbum(Album album) {
+        bandAlbums.add(album);
+        album.getBands().add(this);
+    }
+
+    public void removeAlbum(Album album) {
+        bandAlbums.remove(album);
+        album.getBands().remove(this);
+    }
+
+    public void addSong(Song song) {
+        bandSongs.add(song);
+        song.getBands().add(this);
+    }
+
+    public void removeSong(Song song) {
+        bandSongs.remove(song);
+        song.getBands().remove(this);
     }
 }
