@@ -1,8 +1,11 @@
 package com.example.musify.service;
 
+import com.example.musify.UserUtils;
 import com.example.musify.dto.UserDTO;
 import com.example.musify.dto.UserLoginDTO;
 import com.example.musify.dto.UserViewDTO;
+import com.example.musify.exception.ResourceNotFoundException;
+import com.example.musify.exception.UnauthorizedException;
 import com.example.musify.mapper.UserMapper;
 import com.example.musify.mapper.UserMapperImpl;
 import com.example.musify.model.User;
@@ -12,6 +15,7 @@ import com.example.musify.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -31,11 +35,13 @@ public class UserService {
         this.userMapper = new UserMapperImpl();
     }
 
+    @Transactional
     public List<UserViewDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
         return userMapper.toViewDTOList(users);
     }
 
+    @Transactional
     public UserViewDTO getUserById(Integer id) {
         Optional<User> user = userRepository.findById(id);
 
@@ -62,23 +68,96 @@ public class UserService {
         return userMapper.toViewDTO(user);
     }
 
+    @Transactional
     public String loginUser(UserLoginDTO userLoginDTO) {
         Optional<User> user = userRepository.findUserByEmail(userLoginDTO.getEmail());
         String encryptedPassword = encryptPassword(userLoginDTO.getPassword());
 
-        if (user.isPresent() && user.get().getEncryptedPassword().equals(encryptedPassword)) {
-
-            return JwtUtils.generateToken(user.get().getId(), user.get().getEmail(), user.get().getRole());
-        } else {
-            throw new IllegalArgumentException("Invalid email or password");
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
         }
+
+        if(!UserUtils.isActive(user.get())) {
+            throw new IllegalArgumentException("User is not active");
+        }
+
+        return JwtUtils.generateToken(user.get().getId(), user.get().getEmail(), user.get().getRole());
     }
 
-    public UserViewDTO updateUser(int id, UserDTO userDTO) {
-        User user = userMapper.toEntity(userDTO);
+    @Transactional
+    public UserViewDTO updateUserStatus(Integer id, String operation) {
+        String newStatus = "";
+
+        if (!UserUtils.isCurrentAdmin()) {
+            throw new IllegalArgumentException("Only admin can change user status");
+        }
+
+        if (operation.equals("ACTIVATE")) {
+            newStatus = "active";
+        } else if (operation.equals("DEACTIVATE")) {
+            newStatus = "inactive";
+        }
+
+        Optional<User> optional = userRepository.findById(id);
+
+        if (optional.isEmpty()) {
+            throw new ResourceNotFoundException("There is no user with id = " + id);
+        }
+
+        User user = optional.get();
+        user.setStatus(newStatus);
+        userRepository.save(user);
+
+        return userMapper.toViewDTO(user);
+    }
+
+    @Transactional
+    public UserViewDTO updateUser(Integer id, UserDTO userDTO) {
+        Optional<User> optional = userRepository.findById(id);
+
+        if (optional.isEmpty()) {
+            throw new ResourceNotFoundException("There is no user with id = " + id);
+        }
+
+        if (!UserUtils.isCurrentAdmin() && !UserUtils.isOperationOnSelf(id)) {
+            throw new UnauthorizedException("Users can only update their own info");
+        }
+
+        User user = optional.get();
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setEmail(userDTO.getEmail());
         String encryptedPassword = encryptPassword(userDTO.getPassword());
         user.setEncryptedPassword(encryptedPassword);
-        user.setId(id);
+        user.setCountry(userDTO.getCountry());
+
+        user = userRepository.save(user);
+
+        return userMapper.toViewDTO(user);
+    }
+
+    @Transactional
+    public UserViewDTO updateUserRole(Integer id, String operation) {
+        String newRole = "";
+
+        if (!UserUtils.isCurrentAdmin()) {
+            throw new UnauthorizedException("Only admins can modify user roles");
+        }
+
+        if (operation.equals("PROMOTE")) {
+            newRole = "admin";
+        } else if (operation.equals("DEMOTE")) {
+            newRole = "user";
+        }
+
+        Optional<User> optional = userRepository.findById(id);
+
+        if (optional.isEmpty()) {
+            throw new ResourceNotFoundException("There is no user with id = " + id);
+        }
+
+        User user = optional.get();
+        user.setRole(newRole);
         userRepository.save(user);
 
         return userMapper.toViewDTO(user);

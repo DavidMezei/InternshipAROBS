@@ -38,4 +38,14 @@ public class AlternativeSongTitle {
     public void setAlternativeTitle(String alternativeTitle) {
         this.alternativeTitle = alternativeTitle;
     }
+
+    public void removeSong(Song song) {
+        this.song = null;
+        song.getAlternativeSongTitles().remove(this);
+    }
+
+    public void addSong(Song song) {
+        this.song = song;
+        song.getAlternativeSongTitles().add(this);
+    }
 }

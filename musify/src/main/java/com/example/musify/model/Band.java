@@ -18,23 +18,11 @@ public class Band {
     @Column(name = "activity_end_date")
     private String activityEndDate;
 
-    @ManyToMany
-    @JoinTable(name = "bands_artists",
-            joinColumns = {@JoinColumn(name = "band_id")},
-            inverseJoinColumns = {@JoinColumn(name = "artist_id")})
-    private final Set<Artist> artists = new HashSet<>();
+    @ManyToMany(mappedBy = "bands")
+    private Set<Artist> artists = new HashSet<>();
 
-    @ManyToMany()
-    @JoinTable(name = "artists_albums",
-            joinColumns = { @JoinColumn(name = "band_id") },
-            inverseJoinColumns = { @JoinColumn(name = "album_id") })
+    @OneToMany(mappedBy = "band")
     private Set<Album> bandAlbums = new HashSet<>();
-
-    @ManyToMany()
-    @JoinTable(name = "artists_songs",
-            joinColumns = { @JoinColumn(name = "band_id") },
-            inverseJoinColumns = { @JoinColumn(name = "song_id") })
-    private Set<Song> bandSongs = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -91,31 +79,14 @@ public class Band {
         this.bandAlbums = bandAlbums;
     }
 
-    public Set<Song> getBandSongs() {
-        return bandSongs;
-    }
-
-    public void setBandSongs(Set<Song> bandSongs) {
-        this.bandSongs = bandSongs;
-    }
-
     public void addAlbum(Album album) {
         bandAlbums.add(album);
-        album.getBands().add(this);
+        album.setBand(this);
     }
 
     public void removeAlbum(Album album) {
         bandAlbums.remove(album);
-        album.getBands().remove(this);
+        album.setBand(null);
     }
 
-    public void addSong(Song song) {
-        bandSongs.add(song);
-        song.getBands().add(this);
-    }
-
-    public void removeSong(Song song) {
-        bandSongs.remove(song);
-        song.getBands().remove(this);
-    }
 }

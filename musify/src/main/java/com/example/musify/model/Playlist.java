@@ -117,4 +117,14 @@ public class Playlist {
         songsInPlaylist.remove(song);
         song.getPlaylists().remove(this);
     }
+
+    public void addOwnerUser(User user) {
+        ownerUser = user;
+        user.getOwnedPlaylists().add(this);
+    }
+
+    public void removeOwnerUser(User user) {
+        ownerUser = null;
+        user.getOwnedPlaylists().remove(this);
+    }
 }
