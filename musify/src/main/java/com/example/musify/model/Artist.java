@@ -39,7 +39,7 @@ public class Artist {
     @JoinTable(name = "artists_songs",
             joinColumns = { @JoinColumn(name = "artist_id") },
             inverseJoinColumns = { @JoinColumn(name = "song_id") })
-    private Set<Song> artistSongs = new HashSet<>();
+    private Set<Song> composedSongs = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -109,12 +109,12 @@ public class Artist {
         this.artistAlbums = artistAlbums;
     }
 
-    public Set<Song> getArtistSongs() {
-        return artistSongs;
+    public Set<Song> getComposedSongs() {
+        return composedSongs;
     }
 
-    public void setArtistSongs(Set<Song> artistSongs) {
-        this.artistSongs = artistSongs;
+    public void setComposedSongs(Set<Song> composedSongs) {
+        this.composedSongs = composedSongs;
     }
 
     public void addAlbum(Album album) {

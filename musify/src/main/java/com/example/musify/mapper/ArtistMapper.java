@@ -13,5 +13,5 @@ public interface ArtistMapper {
 
     Artist toEntity(ArtistDTO artistDTO);
 
-    List<ArtistDTO> toDtos(List<Artist> artists);
+    List<ArtistDTO> toDTOList(List<Artist> artists);
 }

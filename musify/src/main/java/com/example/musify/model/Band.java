@@ -1,7 +1,9 @@
 package com.example.musify.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -89,4 +91,19 @@ public class Band {
         album.setBand(null);
     }
 
+    public void setBandName(String bandName) {
+        this.bandName = bandName;
+    }
+
+    public Set<Artist> getArtists() {
+        return artists;
+    }
+
+    public List<Integer> getArtistsIds() {
+        List<Integer> artistsIds = new ArrayList<>();
+        for (Artist artist : artists) {
+            artistsIds.add(artist.getId());
+        }
+        return artistsIds;
+    }
 }

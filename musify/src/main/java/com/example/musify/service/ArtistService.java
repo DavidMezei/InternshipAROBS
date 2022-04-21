@@ -24,7 +24,7 @@ public class ArtistService {
     }
 
     public List<ArtistDTO> getArtists() {
-        return artistMapper.toDtos(artistRepository.findAll());
+        return artistMapper.toDTOList(artistRepository.findAll());
     }
 
     public ArtistDTO getArtistById(Integer id) {

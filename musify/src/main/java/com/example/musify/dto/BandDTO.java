@@ -1,16 +1,20 @@
 package com.example.musify.dto;
 
+import java.util.List;
+
 public class BandDTO {
     private Integer id;
     private String bandName;
     private String location;
     private String activityStartDate;
     private String activityEndDate;
+    private List<Integer> bandMembersIds;
 
     public BandDTO() {
     }
 
-    public BandDTO(Integer id, String bandName, String location, String activityStartDate, String activityEndDate) {
+    public BandDTO(Integer id, String bandName, String location, String activityStartDate, String activityEndDate, List<Integer> bandMembersIds) {
+        this.bandMembersIds = bandMembersIds;
         this.id = id;
         this.bandName = bandName;
         this.location = location;
@@ -58,4 +62,11 @@ public class BandDTO {
         this.activityEndDate = activityEndDate;
     }
 
+    public List<Integer> getBandMembersIds() {
+        return bandMembersIds;
+    }
+
+    public void setBandMembersIds(List<Integer> bandMembersIds) {
+        this.bandMembersIds = bandMembersIds;
+    }
 }

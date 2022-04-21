@@ -22,7 +22,7 @@ public class Playlist {
     @Column(name = "updated_date")
     private Date updatedDate;
 
-    @ManyToMany(mappedBy = "subscribedToPlaylists")
+    @ManyToMany(mappedBy = "followedPlaylists")
     private Set<User> users = new HashSet<>();
 
     @ManyToMany()
