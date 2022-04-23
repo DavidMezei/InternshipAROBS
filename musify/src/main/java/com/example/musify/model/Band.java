@@ -34,6 +34,9 @@ public class Band {
         this.id = id;
     }
 
+    public void setArtists(Set<Artist> artists) {
+        this.artists = artists;
+    }
 
     public void setLocation(String location) {
         this.location = location;

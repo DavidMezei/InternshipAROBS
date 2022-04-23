@@ -3,7 +3,9 @@ package com.example.musify.model;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "albums")
@@ -28,12 +30,26 @@ public class Album {
 
     @ManyToMany()
     @JoinTable(name = "albums_songs",
-            joinColumns = { @JoinColumn(name = "album_id") },
-            inverseJoinColumns = { @JoinColumn(name = "song_id") })
+            joinColumns = {@JoinColumn(name = "album_id")},
+            inverseJoinColumns = {@JoinColumn(name = "song_id")})
     private Set<Song> songs = new HashSet<>();
 
 
     public Album() {
+    }
+
+    public List<Integer> getSongIds() {
+        return songs.stream()
+                .map(Song::getId)
+                .collect(Collectors.toList());
+    }
+
+    public Integer getArtistId() {
+        return artist.getId();
+    }
+
+    public Integer getBandId() {
+        return band.getId();
     }
 
     public Integer getId() {

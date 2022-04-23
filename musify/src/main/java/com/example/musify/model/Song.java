@@ -3,8 +3,11 @@ package com.example.musify.model;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "songs")
@@ -30,6 +33,35 @@ public class Song {
     private Set<Playlist> playlists = new HashSet<>();
 
     public Song() {
+    }
+
+    public List<String> getAlternativeSongTitlesList() {
+        return alternativeSongTitles
+                .stream()
+                .map(AlternativeSongTitle::getAlternativeTitle)
+                .collect(Collectors.toList());
+    }
+
+    public List<Integer> getComposersIds() {
+        List<Integer> ids = new ArrayList<>();
+        for (Artist composer : composers) {
+            ids.add(composer.getId());
+        }
+        return ids;
+    }
+
+    public List<String> getComposersStageNamesList() {
+        return composers
+                .stream()
+                .map(Artist::getStageName)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getAlbumsTitlesList() {
+        return albums
+                .stream()
+                .map(Album::getTitle)
+                .collect(Collectors.toList());
     }
 
     public Integer getId() {
@@ -119,5 +151,10 @@ public class Song {
     public void removeSongFromPlaylist(Playlist playlist) {
         playlists.remove(playlist);
         playlist.getSongsInPlaylist().remove(this);
+    }
+
+    public void addComposer(Artist artist) {
+        composers.add(artist);
+        artist.getComposedSongs().add(this);
     }
 }

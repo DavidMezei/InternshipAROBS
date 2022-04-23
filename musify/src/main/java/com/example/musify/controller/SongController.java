@@ -1,6 +1,7 @@
 package com.example.musify.controller;
 
 import com.example.musify.dto.SongDTO;
+import com.example.musify.dto.SongViewDTO;
 import com.example.musify.model.Song;
 import com.example.musify.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,15 @@ public class SongController {
     @PutMapping("/{id}")
     public ResponseEntity<SongDTO> updateSong(@PathVariable Integer id, @RequestBody SongDTO songDTO) {
         return new ResponseEntity<>(songService.updateSong(id, songDTO), HttpStatus.OK);
+    }
+
+    @GetMapping("/playlist/{id}")
+    public ResponseEntity<List<SongViewDTO>> readSongsByPlaylistId(@PathVariable Integer id) {
+        return new ResponseEntity<>(songService.readSongsByPlaylistId(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/album/{id}")
+    public ResponseEntity<List<SongViewDTO>> readSongsByAlbumId(@PathVariable Integer id) {
+        return new ResponseEntity<>(songService.readSongsByAlbumId(id), HttpStatus.OK);
     }
 }
