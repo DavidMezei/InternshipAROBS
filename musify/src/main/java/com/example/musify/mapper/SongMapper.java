@@ -20,5 +20,7 @@ public interface SongMapper {
     @Mapping(target = "composers", expression = "java(song.getComposersStageNamesList())")
     SongViewDTO toViewDto(Song song);
 
+    List<SongViewDTO> toViewDTOList(List<Song> songs);
+
     Song toEntity(SongDTO songDTO);
 }

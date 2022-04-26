@@ -11,4 +11,6 @@ public interface SongRepository extends CrudRepository<Song, Integer> {
 
     @Override
     List<Song> findAll();
+
+    List<Song> findAllByTitleContainingIgnoreCase(String searchTerm);
 }

@@ -9,4 +9,6 @@ public interface ArtistRepository extends CrudRepository<Artist, Integer> {
 
     @Override
     List<Artist> findAll();
+
+    List<Artist> findAllByStageNameContainingIgnoreCase(String searchTerm);
 }
