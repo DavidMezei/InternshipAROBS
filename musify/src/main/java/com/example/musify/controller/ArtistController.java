@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@RequestMapping("/artists")
 @RestController
 public class ArtistController {
     private final ArtistService artistService;
@@ -19,27 +20,27 @@ public class ArtistController {
         this.artistService = artistService;
     }
 
-    @GetMapping("/artists")
+    @GetMapping()
     public ResponseEntity<List<ArtistDTO>> getAllArtists() {
         return new ResponseEntity<>(artistService.getArtists(), HttpStatus.OK);
     }
 
-    @GetMapping("/artist/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ArtistDTO> getArtistById(@PathVariable Integer id) {
         return new ResponseEntity<>(artistService.getArtistById(id), HttpStatus.OK);
     }
 
-    @PostMapping("/artist")
+    @PostMapping()
     public ResponseEntity<ArtistDTO> addArtist(@RequestBody @Valid ArtistDTO artistDTO) {
         return new ResponseEntity<>(artistService.addArtist(artistDTO), HttpStatus.OK);
     }
 
-    @PutMapping("/artist/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ArtistDTO> updateArtist(@PathVariable Integer id, @RequestBody @Valid ArtistDTO artistDTO) {
         return new ResponseEntity<>(artistService.updateArtist(id, artistDTO), HttpStatus.OK);
     }
 
-    @DeleteMapping("/artist/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteArtistById(@PathVariable Integer id) {
         return new ResponseEntity<>(artistService.deleteArtistById(id), HttpStatus.OK);
     }
